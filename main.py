@@ -1,9 +1,10 @@
 import cv2 as cv
 from time import sleep
 from emailing import send_email
+from threading import Thread
 
 video = cv.VideoCapture(0)
-sleep(0.5)
+sleep(1)
 
 first_frame = None
 status_list = []
@@ -42,10 +43,11 @@ while True:
     if rectangle_area > max_rectangle:
         cv.imwrite("image.png", frame)
         max_rectangle = rectangle_area
-        print(max_rectangle)
             
     if status_list[0] == 1 and status_list[1] == 0:
-        send_email()
+        email_thread = Thread(target=send_email)
+        email_thread.daemon = True
+        email_thread.start()
         max_rectangle = 0
         
     cv.imshow("video", frame)
