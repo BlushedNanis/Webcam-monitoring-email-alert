@@ -3,22 +3,30 @@ from time import sleep
 from emailing import send_email
 from threading import Thread
 
+
+# Set video capture instance
 video = cv.VideoCapture(0)
+
+# Add 1 sleep second to allow the camera to initiate
 sleep(1)
 
+#Control variables
 first_frame = None
 status_list = []
 max_rectangle = 0
 
 while True:
+    # Main loop
     status = 0
     rectangle_area = 0
     
+    # Capture frame
     check, frame = video.read()
     gray_frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     gray_gaus_frame = cv.GaussianBlur(gray_frame, (21,21), 0)
     
     if first_frame is None:
+        # Set reference frame
         first_frame = gray_gaus_frame
     
     delta_frame = cv.absdiff(first_frame, gray_gaus_frame)
